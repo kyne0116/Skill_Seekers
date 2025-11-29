@@ -1,14 +1,14 @@
 {
   "name": "spring-ai-alibaba",
   "description": "Complete Spring AI Alibaba ecosystem including Alibaba Cloud integrations, Chinese LLM support, Agent Framework, Graph Core, and all community examples. Use this skill for Tongyi Qianwen integration, Alibaba Cloud services, agent development, and production deployment.",
-  "merge_mode": "rule-based",
+  "merge_mode": "claude-enhanced",
   "sources": [
     {
       "type": "github",
       "repo": "alibaba/spring-ai-alibaba",
       "include_code": true,
       "code_analysis_depth": "deep",
-      "include_issues": true,
+      "include_issues": false,
       "max_issues": 100,
       "include_changelog": true,
       "include_releases": true,
@@ -29,7 +29,7 @@
       "type": "github",
       "repo": "spring-ai-alibaba/examples",
       "include_code": true,
-      "code_analysis_depth": "full",
+      "code_analysis_depth": "deep",
       "include_issues": false,
       "include_changelog": false,
       "include_releases": false,

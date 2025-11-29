@@ -25,7 +25,7 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 
 try:
-    from github import Github, GithubException, Repository
+    from github import Github, GithubException, Repository, Auth
     from github.GithubException import RateLimitExceededException
 except ImportError:
     print("Error: PyGithub not installed. Run: pip install PyGithub")
@@ -72,7 +72,16 @@ class GitHubScraper:
 
         # GitHub client setup (C1.1)
         token = self._get_token()
-        self.github = Github(token) if token else Github()
+        if token:
+            try:
+                # Try new Auth API first (PyGithub >= 2.0)
+                auth = Auth.Token(token)
+                self.github = Github(auth=auth)
+            except (AttributeError, TypeError):
+                # Fallback to old API (PyGithub < 2.0)
+                self.github = Github(token)
+        else:
+            self.github = Github()
         self.repo: Optional[Repository.Repository] = None
 
         # Options

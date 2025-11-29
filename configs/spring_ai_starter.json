@@ -40,20 +40,14 @@
       "type": "github",
       "repo": "spring-ai-alibaba/examples",
       "include_code": true,
-      "code_analysis_depth": "deep",
+      "code_analysis_depth": "surface",
       "include_issues": false,
       "include_changelog": false,
       "include_releases": true,
       "file_patterns": [
-        "**/*.java",
-        "**/*.md",
-        "**/README.md",
+        "**/README*.md",
         "**/pom.xml",
-        "**/build.gradle",
-        "**/application.yml",
-        "**/application.properties",
-        "**/application-*.yml",
-        "**/application-*.properties"
+        "**/build.gradle"
       ]
     }
   ]
