@@ -43,6 +43,9 @@ Thumbs.db
 # Backups
 *.backup
 
+# Logs
+*.log
+
 # Testing artifacts
 .pytest_cache/
 .coverage

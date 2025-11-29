@@ -1,0 +1,60 @@
+{
+  "name": "spring-ai-starter",
+  "description": "Spring AI and Spring AI Alibaba quick start guide with working examples. Use this skill for basic Spring AI concepts, configuration, chat models, embeddings, and ready-to-run code examples. Covers integration with Chinese LLMs like Tongyi Qianwen (通义千问), Baichuan, and more.",
+  "merge_mode": "rule-based",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://docs.spring.io/spring-ai/reference/",
+      "extract_api": true,
+      "max_pages": 100,
+      "selectors": {
+        "main_content": "article",
+        "title": "h1",
+        "code_blocks": "pre code"
+      },
+      "url_patterns": {
+        "include": [
+          "/getting-started",
+          "/quickstart",
+          "/concepts/chat",
+          "/concepts/embedding",
+          "/api/chat"
+        ],
+        "exclude": [
+          "/javadoc",
+          "/downloads",
+          "/api-docs"
+        ]
+      },
+      "categories": {
+        "getting_started": ["getting-started", "quickstart", "introduction", "setup"],
+        "concepts": ["concept", "architecture", "model", "client"],
+        "chat": ["chat", "chatmodel", "conversation", "message"],
+        "embeddings": ["embedding", "vector", "similarity"],
+        "examples": ["example", "tutorial", "guide", "demo"]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "spring-ai-alibaba/examples",
+      "include_code": true,
+      "code_analysis_depth": "deep",
+      "include_issues": false,
+      "include_changelog": false,
+      "include_releases": true,
+      "file_patterns": [
+        "**/*.java",
+        "**/*.md",
+        "**/README.md",
+        "**/pom.xml",
+        "**/build.gradle",
+        "**/application.yml",
+        "**/application.properties",
+        "**/application-*.yml",
+        "**/application-*.properties"
+      ]
+    }
+  ]
+}

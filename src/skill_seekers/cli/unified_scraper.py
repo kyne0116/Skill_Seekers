@@ -23,10 +23,10 @@ from typing import Dict, List, Any, Optional
 
 # Import validators and scrapers
 try:
-    from config_validator import ConfigValidator, validate_config
-    from conflict_detector import ConflictDetector
-    from merge_sources import RuleBasedMerger, ClaudeEnhancedMerger
-    from unified_skill_builder import UnifiedSkillBuilder
+    from skill_seekers.cli.config_validator import ConfigValidator, validate_config
+    from skill_seekers.cli.conflict_detector import ConflictDetector
+    from skill_seekers.cli.merge_sources import RuleBasedMerger, ClaudeEnhancedMerger
+    from skill_seekers.cli.unified_skill_builder import UnifiedSkillBuilder
 except ImportError as e:
     print(f"Error importing modules: {e}")
     print("Make sure you're running from the project root directory")

@@ -1,0 +1,59 @@
+{
+  "name": "spring-ai-official",
+  "description": "Complete Spring AI framework reference - core concepts, APIs, advanced features, and source code insights. Use this skill for deep understanding of Spring AI internals, custom model adapters, function calling, streaming responses, and enterprise-level implementations.",
+  "merge_mode": "rule-based",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://docs.spring.io/spring-ai/reference/",
+      "extract_api": true,
+      "max_pages": 500,
+      "selectors": {
+        "main_content": "article",
+        "title": "h1",
+        "code_blocks": "pre code"
+      },
+      "url_patterns": {
+        "include": [
+          "/getting-started",
+          "/concepts",
+          "/api",
+          "/observability",
+          "/advisors"
+        ],
+        "exclude": [
+          "/javadoc",
+          "/downloads"
+        ]
+      },
+      "categories": {
+        "getting_started": ["getting-started", "quickstart", "introduction"],
+        "concepts": ["concept", "architecture", "model", "design"],
+        "chat": ["chat", "chatmodel", "conversation"],
+        "embeddings": ["embedding", "vector", "vectorstore"],
+        "api": ["api", "reference", "interface", "client"],
+        "observability": ["observability", "metrics", "monitoring"],
+        "advisors": ["advisor", "function", "callback"],
+        "advanced": ["advanced", "streaming", "reactive", "async"]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "spring-projects/spring-ai",
+      "include_code": true,
+      "code_analysis_depth": "deep",
+      "include_issues": true,
+      "max_issues": 50,
+      "include_changelog": true,
+      "include_releases": true,
+      "file_patterns": [
+        "spring-ai-core/**/*.java",
+        "spring-ai-spring-boot-autoconfigure/**/*.java",
+        "spring-ai-spring-boot-starters/**/*.java",
+        "**/*.md",
+        "**/README.md"
+      ]
+    }
+  ]
+}
