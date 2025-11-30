@@ -288,7 +288,7 @@ This skill combines knowledge from multiple sources:
 
         # Create index
         index_path = os.path.join(docs_dir, 'index.md')
-        with open(index_path, 'w') as f:
+        with open(index_path, 'w', encoding='utf-8') as f:
             f.write("# Documentation\n\n")
             f.write("Reference from official documentation.\n\n")
 
@@ -304,14 +304,14 @@ This skill combines knowledge from multiple sources:
         # Create README reference
         if github_data.get('readme'):
             readme_path = os.path.join(github_dir, 'README.md')
-            with open(readme_path, 'w') as f:
+            with open(readme_path, 'w', encoding='utf-8') as f:
                 f.write("# Repository README\n\n")
                 f.write(github_data['readme'])
 
         # Create issues reference
         if github_data.get('issues'):
             issues_path = os.path.join(github_dir, 'issues.md')
-            with open(issues_path, 'w') as f:
+            with open(issues_path, 'w', encoding='utf-8') as f:
                 f.write("# GitHub Issues\n\n")
                 f.write(f"{len(github_data['issues'])} recent issues.\n\n")
 
@@ -325,7 +325,7 @@ This skill combines knowledge from multiple sources:
         # Create releases reference
         if github_data.get('releases'):
             releases_path = os.path.join(github_dir, 'releases.md')
-            with open(releases_path, 'w') as f:
+            with open(releases_path, 'w', encoding='utf-8') as f:
                 f.write("# Releases\n\n")
 
                 for release in github_data['releases'][:10]:
@@ -344,7 +344,7 @@ This skill combines knowledge from multiple sources:
 
         # Create index
         index_path = os.path.join(pdf_dir, 'index.md')
-        with open(index_path, 'w') as f:
+        with open(index_path, 'w', encoding='utf-8') as f:
             f.write("# PDF Documentation\n\n")
             f.write("Reference from PDF document.\n\n")
 
@@ -357,7 +357,7 @@ This skill combines knowledge from multiple sources:
 
         api_path = os.path.join(api_dir, 'merged_api.md')
 
-        with open(api_path, 'w') as f:
+        with open(api_path, 'w', encoding='utf-8') as f:
             f.write("# Merged API Reference\n\n")
             f.write("*Combined from documentation and code analysis*\n\n")
 
@@ -374,7 +374,7 @@ This skill combines knowledge from multiple sources:
         """Generate detailed conflicts report."""
         conflicts_path = os.path.join(self.skill_dir, 'references', 'conflicts.md')
 
-        with open(conflicts_path, 'w') as f:
+        with open(conflicts_path, 'w', encoding='utf-8') as f:
             f.write("# Conflict Report\n\n")
             f.write(f"Found **{len(self.conflicts)}** conflicts between sources.\n\n")
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Simple Skill Packager
 Packages a skill directory into a .zip file for Claude.
@@ -11,6 +12,15 @@ Usage:
 
 import os
 import sys
+import io
+
+# Set UTF-8 encoding for Windows console
+if sys.platform == 'win32':
+    if sys.stdout.encoding != 'utf-8':
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    if sys.stderr.encoding != 'utf-8':
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
 import zipfile
 import argparse
 from pathlib import Path

@@ -20,8 +20,9 @@ import json
 import re
 import argparse
 import logging
+import time
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Callable
 from datetime import datetime
 
 try:
@@ -63,12 +64,20 @@ class GitHubScraper:
     - Releases
     """
 
-    def __init__(self, config: Dict[str, Any]):
-        """Initialize GitHub scraper with configuration."""
+    def __init__(self, config: Dict[str, Any], progress_callback: Optional[Callable] = None):
+        """Initialize GitHub scraper with configuration.
+
+        Args:
+            config: Configuration dictionary
+            progress_callback: Optional callback(source_type, status, progress, details)
+        """
         self.config = config
         self.repo_name = config['repo']
         self.name = config.get('name', self.repo_name.split('/')[-1])
         self.description = config.get('description', f'Skill for {self.repo_name}')
+
+        # Progress callback
+        self.progress_callback = progress_callback
 
         # GitHub client setup (C1.1)
         token = self._get_token()
@@ -93,6 +102,10 @@ class GitHubScraper:
         self.code_analysis_depth = config.get('code_analysis_depth', 'surface')  # 'surface', 'deep', 'full'
         self.file_patterns = config.get('file_patterns', [])
 
+        # Limits and timeouts
+        self.max_tree_items = config.get('max_tree_items', 5000)
+        self.file_tree_timeout = config.get('file_tree_timeout', 300)  # 5 minutes
+
         # Initialize code analyzer if deep analysis requested
         self.code_analyzer = None
         if self.code_analysis_depth != 'surface' and CODE_ANALYZER_AVAILABLE:
@@ -115,6 +128,11 @@ class GitHubScraper:
             'changelog': '',
             'releases': []
         }
+
+    def _update_progress(self, status: str, progress: str = None, details: Dict = None):
+        """Update progress through callback."""
+        if self.progress_callback:
+            self.progress_callback('github', status, progress=progress, details=details)
 
     def _get_token(self) -> Optional[str]:
         """
@@ -143,42 +161,54 @@ class GitHubScraper:
         """
         try:
             logger.info(f"Starting GitHub scrape for: {self.repo_name}")
+            self._update_progress('running', progress="Starting...")
 
             # C1.1: Fetch repository
+            self._update_progress('running', progress="Fetching repository info...")
             self._fetch_repository()
 
             # C1.2: Extract README
+            self._update_progress('running', progress="Extracting README...")
             self._extract_readme()
 
             # C1.3-C1.6: Extract code structure
+            self._update_progress('running', progress="Extracting code structure...")
             self._extract_code_structure()
 
             # C1.7: Extract Issues
             if self.include_issues:
+                self._update_progress('running', progress=f"Extracting issues (max {self.max_issues})...")
                 self._extract_issues()
 
             # C1.8: Extract CHANGELOG
             if self.include_changelog:
+                self._update_progress('running', progress="Extracting CHANGELOG...")
                 self._extract_changelog()
 
             # C1.9: Extract Releases
             if self.include_releases:
+                self._update_progress('running', progress="Extracting releases...")
                 self._extract_releases()
 
             # Save extracted data
+            self._update_progress('running', progress="Saving data...")
             self._save_data()
 
             logger.info(f"✅ Scraping complete! Data saved to: {self.data_file}")
+            self._update_progress('completed', progress="Completed")
             return self.extracted_data
 
         except RateLimitExceededException:
             logger.error("GitHub API rate limit exceeded. Please wait or use authentication token.")
+            self._update_progress('failed', progress="Rate limit exceeded")
             raise
         except GithubException as e:
             logger.error(f"GitHub API error: {e}")
+            self._update_progress('failed', progress=f"GitHub API error: {str(e)}")
             raise
         except Exception as e:
             logger.error(f"Unexpected error during scraping: {e}")
+            self._update_progress('failed', progress=f"Error: {str(e)}")
             raise
 
     def _fetch_repository(self):
@@ -272,14 +302,83 @@ class GitHubScraper:
             logger.warning(f"Could not fetch languages: {e}")
 
     def _extract_file_tree(self):
-        """Extract repository file tree structure."""
+        """
+        Extract repository file tree structure using fast Git Tree API.
+
+        This method uses PyGithub's get_git_tree() which makes a single API call
+        to get the entire tree, instead of making hundreds of calls with get_contents().
+
+        Falls back to slower method if tree is truncated or API fails.
+        """
         logger.info("Building file tree...")
+        self._update_progress('running', progress="Building file tree...")
+
+        try:
+            # Method 1: Fast Git Tree API (single API call)
+            tree = self.repo.get_git_tree(
+                self.repo.default_branch,
+                recursive=True
+            )
+
+            # Check if tree was truncated (too large)
+            if tree.raw_data.get('truncated', False):
+                logger.warning(f"File tree truncated ({len(tree.tree)} items). Repository too large, using fallback method...")
+                self._extract_file_tree_fallback()
+                return
+
+            # Convert git tree items to our format
+            file_tree = []
+            for item in tree.tree:
+                file_info = {
+                    'path': item.path,
+                    'type': 'file' if item.type == 'blob' else 'dir',
+                    'size': item.size if item.type == 'blob' else None
+                }
+                file_tree.append(file_info)
+
+                # Update progress every 500 items
+                if len(file_tree) % 500 == 0:
+                    self._update_progress(
+                        'running',
+                        progress=f"{len(file_tree)} files scanned"
+                    )
+
+                # Limit check
+                if len(file_tree) >= self.max_tree_items:
+                    logger.warning(f"File tree limit reached: {self.max_tree_items} items")
+                    break
+
+            self.extracted_data['file_tree'] = file_tree
+            logger.info(f"File tree built: {len(file_tree)} items (fast mode)")
+            self._update_progress('running', progress=f"File tree: {len(file_tree)} items")
+
+        except GithubException as e:
+            logger.warning(f"Fast tree API failed: {e}. Using fallback method...")
+            self._extract_file_tree_fallback()
+
+    def _extract_file_tree_fallback(self):
+        """
+        Fallback method using get_contents() for traversing file tree.
+        Slower but works for all repositories.
+        """
+        logger.info("Building file tree (fallback mode)...")
 
         try:
             contents = self.repo.get_contents("")
             file_tree = []
+            start_time = time.time()
 
             while contents:
+                # Timeout check
+                if time.time() - start_time > self.file_tree_timeout:
+                    logger.warning(f"File tree timeout after {self.file_tree_timeout}s")
+                    break
+
+                # Limit check
+                if len(file_tree) >= self.max_tree_items:
+                    logger.warning(f"File tree limit reached: {self.max_tree_items} items")
+                    break
+
                 file_content = contents.pop(0)
 
                 file_info = {
@@ -289,14 +388,23 @@ class GitHubScraper:
                 }
                 file_tree.append(file_info)
 
+                # Update progress every 50 items
+                if len(file_tree) % 50 == 0:
+                    elapsed = int(time.time() - start_time)
+                    self._update_progress(
+                        'running',
+                        progress=f"{len(file_tree)} files scanned ({elapsed}s)"
+                    )
+
                 if file_content.type == "dir":
                     contents.extend(self.repo.get_contents(file_content.path))
 
             self.extracted_data['file_tree'] = file_tree
-            logger.info(f"File tree built: {len(file_tree)} items")
+            logger.info(f"File tree built: {len(file_tree)} items (fallback mode)")
 
         except GithubException as e:
             logger.warning(f"Could not build file tree: {e}")
+            self._update_progress('running', progress="File tree extraction failed")
 
     def _extract_signatures_and_tests(self):
         """

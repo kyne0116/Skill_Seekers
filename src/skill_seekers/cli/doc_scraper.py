@@ -75,6 +75,11 @@ class DocToSkillConverter:
         self.dry_run = dry_run
         self.resume = resume
 
+        # Progress tracking for unified scraper
+        self.progress_file = config.get('progress_file')
+        self.source_name = config.get('source_name', 'documentation')
+        self.last_progress_update = time.time() if self.progress_file else None
+
         # Paths
         self.data_dir = f"output/{self.name}_data"
         self.skill_dir = f"output/{self.name}"
@@ -141,6 +146,63 @@ class DocToSkillConverter:
             return False
 
         return True
+
+    def _update_progress_file(self, force: bool = False) -> None:
+        """Update progress file for unified scraper (rate-limited to every 5 seconds).
+
+        Args:
+            force: Force update regardless of time since last update
+        """
+        if not self.progress_file:
+            return
+
+        # Rate limit: only update every 5 seconds unless forced
+        now = time.time()
+        if not force and self.last_progress_update and (now - self.last_progress_update) < 5:
+            return
+
+        try:
+            # Read current progress file
+            with open(self.progress_file, 'r', encoding='utf-8') as f:
+                progress_data = json.load(f)
+
+            # Update documentation source progress
+            max_pages = self.config.get('max_pages', 0)
+            progress_str = f"{len(self.visited_urls)}/{max_pages} pages" if max_pages > 0 else f"{len(self.visited_urls)} pages"
+
+            if 'phases' in progress_data and 'phase1_scraping' in progress_data['phases']:
+                sources = progress_data['phases']['phase1_scraping'].get('sources', {})
+                if self.source_name in sources:
+                    sources[self.source_name]['progress'] = progress_str
+                    sources[self.source_name]['status'] = 'running'
+
+            # Update timestamps - CRITICAL FIX: calculate from task start_time
+            from datetime import datetime
+
+            # Parse start_time to get the original task start timestamp
+            start_time_str = progress_data.get('start_time', '')
+            if start_time_str:
+                try:
+                    start_dt = datetime.strptime(start_time_str, "%Y-%m-%d %H:%M:%S")
+                    start_timestamp = start_dt.timestamp()
+                    progress_data['elapsed_seconds'] = int(now - start_timestamp)
+                except:
+                    # Fallback: use existing elapsed_seconds + time since last update
+                    progress_data['elapsed_seconds'] = progress_data.get('elapsed_seconds', 0) + int(now - (self.last_progress_update or now))
+
+            progress_data['last_update'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            # Write back (atomic)
+            temp_file = self.progress_file + '.tmp'
+            with open(temp_file, 'w', encoding='utf-8') as f:
+                json.dump(progress_data, f, indent=2, ensure_ascii=False)
+            os.replace(temp_file, self.progress_file)
+
+            self.last_progress_update = now
+
+        except Exception as e:
+            # Don't fail scraping if progress update fails
+            logger.debug(f"Progress update failed: {e}")
 
     def save_checkpoint(self) -> None:
         """Save progress checkpoint"""
@@ -686,6 +748,8 @@ class DocToSkillConverter:
                         logger.warning("⚠️  Warning: Could not extract links from %s: %s", url, e)
                 else:
                     self.scrape_page(url)
+                    # Update progress file every 5 seconds
+                    self._update_progress_file()
                     self.pages_scraped += 1
 
                     if self.checkpoint_enabled and self.pages_scraped % self.checkpoint_interval == 0:
