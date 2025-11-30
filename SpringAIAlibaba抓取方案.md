@@ -65,14 +65,14 @@ echo $GITHUB_TOKEN
 
 ```bash
 cd D:\02_Dev\Workspace\GitHub\Skill_Seekers
-python run_three_phases.py --skip-existing --force-retry
+python run_springai_three_phases.py --skip-existing --force-retry
 ```
 
 **终端 2 - 实时监控（查看进度）:**
 
 ```bash
 cd D:\02_Dev\Workspace\GitHub\Skill_Seekers
-python watch_progress.py
+python watch_springai_progress.py
 ```
 
 ---
@@ -177,14 +177,14 @@ output/
 
 ```bash
 # 只运行方案1
-python run_three_phases.py --phase 1
+python run_springai_three_phases.py --phase 1
 ```
 
 ### 场景 2: 昨天失败了，今天继续
 
 ```bash
 # 自动跳过成功的，重试失败的
-python run_three_phases.py --skip-existing --force-retry
+python run_springai_three_phases.py --skip-existing --force-retry
 ```
 
 **脚本会:**
@@ -199,17 +199,17 @@ python run_three_phases.py --skip-existing --force-retry
 rm -rf output/spring-ai-*
 
 # 重新抓取所有方案
-python run_three_phases.py --force-retry
+python run_springai_three_phases.py --force-retry
 ```
 
 ### 场景 4: 自定义执行
 
 ```bash
 # 只运行方案2和方案3
-python run_three_phases.py --phase 2 --phase 3
+python run_springai_three_phases.py --phase 2 --phase 3
 
 # 跳过已完成的
-python run_three_phases.py --phase 2 --phase 3 --skip-existing
+python run_springai_three_phases.py --phase 2 --phase 3 --skip-existing
 ```
 
 ---
@@ -235,7 +235,7 @@ set GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
 echo %GITHUB_TOKEN%
 
 # 3. 重新运行
-python run_three_phases.py --skip-existing --force-retry
+python run_springai_three_phases.py --skip-existing --force-retry
 ```
 
 ---
@@ -290,7 +290,7 @@ python test_network.py
 
 修改后重新运行:
 ```bash
-python run_three_phases.py --skip-existing --force-retry
+python run_springai_three_phases.py --skip-existing --force-retry
 ```
 
 ---
@@ -330,7 +330,7 @@ python run_three_phases.py --skip-existing --force-retry
    ```bash
    # Ctrl+C 中断
    # 重新运行
-   python run_three_phases.py --skip-existing --force-retry
+   python run_springai_three_phases.py --skip-existing --force-retry
    ```
 
 ---
@@ -360,7 +360,7 @@ python -c "import json; data=json.load(open('output/spring-ai-starter_progress.j
 
 ```bash
 # 修复问题后，自动重试失败的阶段
-python run_three_phases.py --skip-existing --force-retry
+python run_springai_three_phases.py --skip-existing --force-retry
 ```
 
 ---
@@ -475,7 +475,7 @@ skill-seekers package output/spring-ai-alibaba/
 **A:** 可以！方案1 已经满足大部分开发需求。
 
 ```bash
-python run_three_phases.py --phase 1
+python run_springai_three_phases.py --phase 1
 ```
 
 ---
@@ -493,7 +493,7 @@ python run_three_phases.py --phase 1
 rm -rf output/spring-ai-*
 
 # 重新抓取
-python run_three_phases.py --force-retry
+python run_springai_three_phases.py --force-retry
 ```
 
 ---
@@ -504,7 +504,7 @@ python run_three_phases.py --force-retry
 
 ```bash
 # 第一次失败后，直接重新运行
-python run_three_phases.py --skip-existing --force-retry
+python run_springai_three_phases.py --skip-existing --force-retry
 ```
 
 脚本会:
@@ -520,7 +520,7 @@ python run_three_phases.py --skip-existing --force-retry
 
 建议使用一键执行:
 ```bash
-python run_three_phases.py --skip-existing --force-retry
+python run_springai_three_phases.py --skip-existing --force-retry
 ```
 
 脚本会串行执行所有方案，避免冲突。
@@ -549,10 +549,10 @@ set GITHUB_TOKEN=your_github_token_here
 
 # 2. 打开两个终端，分别运行:
 # 终端 1:
-python run_three_phases.py --skip-existing --force-retry
+python run_springai_three_phases.py --skip-existing --force-retry
 
 # 终端 2:
-python watch_progress.py
+python watch_springai_progress.py
 
 # 3. 等待完成（50-90 分钟），去喝杯咖啡！
 ```

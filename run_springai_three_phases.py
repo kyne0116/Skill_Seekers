@@ -163,9 +163,9 @@ def run_phase(phase, skip_existing=False, force_retry=False):
     print(f"   Progress tracking: output/{phase['name']}_progress.json")
     print()
     print("💡 TIP: Open another terminal and run:")
-    print(f"   python watch_progress.py {phase['name']}")
+    print(f"   python watch_springai_progress.py {phase['name']}")
     print("   OR:")
-    print(f"   python watch_progress.py  (auto-detect mode)")
+    print(f"   python watch_springai_progress.py  (auto-detect mode)")
     print()
 
     # Wait a moment for user to start monitoring
@@ -233,16 +233,16 @@ def main():
         epilog="""
 Examples:
   # Run all three phases
-  python run_three_phases.py
+  python run_springai_three_phases.py
 
   # Run only phase 1 (quick start)
-  python run_three_phases.py --phase 1
+  python run_springai_three_phases.py --phase 1
 
   # Skip phases that already have output
-  python run_three_phases.py --skip-existing
+  python run_springai_three_phases.py --skip-existing
 
   # Run phases 2 and 3
-  python run_three_phases.py --phase 2 --phase 3
+  python run_springai_three_phases.py --phase 2 --phase 3
         """
     )
 
