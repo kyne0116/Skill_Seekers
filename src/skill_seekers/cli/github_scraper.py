@@ -25,6 +25,13 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any, Callable
 from datetime import datetime
 
+# Configure logging first (before any logger usage)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 try:
     from github import Github, GithubException, Repository, Auth
     from github.GithubException import RateLimitExceededException
@@ -39,13 +46,6 @@ try:
 except ImportError:
     CODE_ANALYZER_AVAILABLE = False
     logger.warning("Code analyzer not available - deep analysis disabled")
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 
 class GitHubScraper:
@@ -873,7 +873,7 @@ Examples:
 
     # Build config from args or file
     if args.config:
-        with open(args.config, 'r') as f:
+        with open(args.config, 'r', encoding='utf-8') as f:
             config = json.load(f)
     elif args.repo:
         config = {

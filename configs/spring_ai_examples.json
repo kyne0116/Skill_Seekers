@@ -1,0 +1,24 @@
+{
+  "name": "spring-ai-examples",
+  "repo": "spring-ai-alibaba/examples",
+  "description": "Spring AI Alibaba 示例项目集合，包含各种 AI 集成和应用场景的完整代码示例",
+  "github_token": null,
+  "include_issues": true,
+  "max_issues": 50,
+  "include_changelog": true,
+  "include_releases": true,
+  "include_code": true,
+  "file_patterns": [
+    "**/*.java",
+    "**/*.kt",
+    "**/pom.xml",
+    "**/build.gradle",
+    "**/build.gradle.kts",
+    "**/*.yml",
+    "**/*.yaml",
+    "**/*.properties",
+    "**/README.md",
+    "**/README_CN.md",
+    "**/*.md"
+  ]
+}

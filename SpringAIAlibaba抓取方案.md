@@ -4,15 +4,15 @@
 
 **适用工具**: Skill Seekers v2.0.0
 **抓取方式**: 全自动 + 实时进度监控
-**总用时**: 50-90 分钟（一键完成三个方案）
+**总用时**: 60-100 分钟（一键完成四个方案）
 
 ---
 
 ## ⚡ 推荐方案: 一键执行（80% 用户选择这个！）
 
 ### 适用场景
-- ✅ 想要一次性获取所有三个技能（入门 + 框架 + 生态）
-- ✅ 不想手动运行三次命令
+- ✅ 想要一次性获取所有四个技能（入门 + 框架 + 生态 + 示例）
+- ✅ 不想手动运行四次命令
 - ✅ 需要实时查看抓取进度
 - ✅ 失败后自动重试
 
@@ -65,7 +65,7 @@ echo $GITHUB_TOKEN
 
 ```bash
 cd D:\02_Dev\Workspace\GitHub\Skill_Seekers
-python run_springai_three_phases.py --skip-existing --force-retry
+python run_springai.py --skip-existing --force-retry
 ```
 
 **终端 2 - 实时监控（查看进度）:**
@@ -129,7 +129,8 @@ Elapsed: 2m 15s
 | **方案1: 快速入门** | 5-10 分钟 | 基础文档 + 示例代码 |
 | **方案2: 完整框架** | 15-20 分钟 | 完整文档 + 源码分析 |
 | **方案3: 完整生态** | 30-60 分钟 | 阿里云生态 + Agent 框架 |
-| **总计** | **50-90 分钟** | 全自动执行 |
+| **方案4: 示例仓库** | 3-5 分钟 | Examples 仓库代码示例 |
+| **总计** | **60-100 分钟** | 全自动执行 |
 
 💡 **提示**: 去喝杯咖啡，脚本会自动完成所有工作！
 
@@ -147,13 +148,14 @@ Elapsed: 2m 15s
 
 ### 完成后
 
-**所有阶段成功后，你会得到三个技能包:**
+**所有阶段成功后，你会得到四个技能包:**
 
 ```
 output/
 ├── spring-ai-starter.zip         # 方案1: 快速入门
 ├── spring-ai-official.zip        # 方案2: 完整框架
-└── spring-ai-alibaba.zip         # 方案3: 完整生态
+├── spring-ai-alibaba.zip         # 方案3: 完整生态
+└── spring-ai-examples.zip        # 方案4: 示例仓库
 ```
 
 **上传到 Claude:**
@@ -177,14 +179,14 @@ output/
 
 ```bash
 # 只运行方案1
-python run_springai_three_phases.py --phase 1
+python run_springai.py --phase 1
 ```
 
 ### 场景 2: 昨天失败了，今天继续
 
 ```bash
 # 自动跳过成功的，重试失败的
-python run_springai_three_phases.py --skip-existing --force-retry
+python run_springai.py --skip-existing --force-retry
 ```
 
 **脚本会:**
@@ -199,17 +201,17 @@ python run_springai_three_phases.py --skip-existing --force-retry
 rm -rf output/spring-ai-*
 
 # 重新抓取所有方案
-python run_springai_three_phases.py --force-retry
+python run_springai.py --force-retry
 ```
 
 ### 场景 4: 自定义执行
 
 ```bash
 # 只运行方案2和方案3
-python run_springai_three_phases.py --phase 2 --phase 3
+python run_springai.py --phase 2 --phase 3
 
 # 跳过已完成的
-python run_springai_three_phases.py --phase 2 --phase 3 --skip-existing
+python run_springai.py --phase 2 --phase 3 --skip-existing
 ```
 
 ---
@@ -235,7 +237,7 @@ set GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
 echo %GITHUB_TOKEN%
 
 # 3. 重新运行
-python run_springai_three_phases.py --skip-existing --force-retry
+python run_springai.py --skip-existing --force-retry
 ```
 
 ---
@@ -290,7 +292,7 @@ python test_network.py
 
 修改后重新运行:
 ```bash
-python run_springai_three_phases.py --skip-existing --force-retry
+python run_springai.py --skip-existing --force-retry
 ```
 
 ---
@@ -330,7 +332,7 @@ python run_springai_three_phases.py --skip-existing --force-retry
    ```bash
    # Ctrl+C 中断
    # 重新运行
-   python run_springai_three_phases.py --skip-existing --force-retry
+   python run_springai.py --skip-existing --force-retry
    ```
 
 ---
@@ -360,12 +362,12 @@ python -c "import json; data=json.load(open('output/spring-ai-starter_progress.j
 
 ```bash
 # 修复问题后，自动重试失败的阶段
-python run_springai_three_phases.py --skip-existing --force-retry
+python run_springai.py --skip-existing --force-retry
 ```
 
 ---
 
-## 📚 三种抓取方案详解
+## 📚 四种抓取方案详解
 
 如果你想单独运行某个方案，可以使用以下命令:
 
@@ -435,6 +437,31 @@ skill-seekers package output/spring-ai-alibaba/
 
 ---
 
+### 📦 方案4：示例仓库（实战代码）
+
+**适用场景:** 需要完整可运行的示例项目作为参考
+**用时:** 3-5 分钟
+**内容:** Spring AI Alibaba Examples 仓库 + 所有示例代码
+
+```bash
+# 执行抓取（GitHub-only，无需文档抓取）
+skill-seekers github --config configs/spring_ai_examples.json
+
+# 打包
+skill-seekers package output/spring-ai-examples/
+```
+
+**生成文件:** `output/spring-ai-examples.zip`
+
+**包含内容:**
+- 3,555+ 文件的完整代码结构
+- Agent 示例（A2A、MCP 等）
+- 各种集成示例（Milvus、Redis、OpenSearch 等）
+- Docker Compose 配置
+- 完整的 Java/Kotlin 源代码
+
+---
+
 ## 🎯 方案对比
 
 | 方案 | 用时 | 页面数 | 适用场景 | 包含内容 |
@@ -442,8 +469,9 @@ skill-seekers package output/spring-ai-alibaba/
 | 🚀 快速入门 | 5-10 分钟 | ~100 | 新手学习 | 基础概念 + 示例 |
 | 🔧 完整框架 | 15-20 分钟 | ~200 | 经验开发者 | 完整文档 + 源码 |
 | 🏢 完整生态 | 30-60 分钟 | ~500+ | 企业级 | 阿里云集成 + 高级功能 |
+| 📦 示例仓库 | 3-5 分钟 | GitHub | 实战参考 | 完整示例代码 |
 
-💡 **推荐策略:** 从方案1开始，根据需要逐步升级到方案2或方案3。
+💡 **推荐策略:** 从方案1开始，根据需要逐步升级到方案2或方案3，最后抓取方案4作为代码参考。
 
 ---
 
@@ -475,7 +503,7 @@ skill-seekers package output/spring-ai-alibaba/
 **A:** 可以！方案1 已经满足大部分开发需求。
 
 ```bash
-python run_springai_three_phases.py --phase 1
+python run_springai.py --phase 1
 ```
 
 ---
@@ -493,7 +521,7 @@ python run_springai_three_phases.py --phase 1
 rm -rf output/spring-ai-*
 
 # 重新抓取
-python run_springai_three_phases.py --force-retry
+python run_springai.py --force-retry
 ```
 
 ---
@@ -504,7 +532,7 @@ python run_springai_three_phases.py --force-retry
 
 ```bash
 # 第一次失败后，直接重新运行
-python run_springai_three_phases.py --skip-existing --force-retry
+python run_springai.py --skip-existing --force-retry
 ```
 
 脚本会:
@@ -520,7 +548,7 @@ python run_springai_three_phases.py --skip-existing --force-retry
 
 建议使用一键执行:
 ```bash
-python run_springai_three_phases.py --skip-existing --force-retry
+python run_springai.py --skip-existing --force-retry
 ```
 
 脚本会串行执行所有方案，避免冲突。
@@ -549,7 +577,7 @@ set GITHUB_TOKEN=your_github_token_here
 
 # 2. 打开两个终端，分别运行:
 # 终端 1:
-python run_springai_three_phases.py --skip-existing --force-retry
+python run_springai.py --skip-existing --force-retry
 
 # 终端 2:
 python watch_springai_progress.py

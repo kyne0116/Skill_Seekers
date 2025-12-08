@@ -7,9 +7,15 @@ Watches the progress file and displays updates in real-time.
 Run this in a separate terminal while scraping is running.
 
 Usage:
-    python watch_progress.py spring-ai-starter
-    python watch_progress.py spring-ai-official
-    python watch_progress.py spring-ai-alibaba
+    # Show summary of all tasks (default)
+    python watch_springai_progress.py
+    python watch_springai_progress.py --summary
+
+    # Monitor specific task in real-time
+    python watch_springai_progress.py spring-ai-starter
+    python watch_springai_progress.py spring-ai-official
+    python watch_springai_progress.py spring-ai-alibaba
+    python watch_springai_progress.py spring-ai-examples
 """
 
 import sys
@@ -373,15 +379,100 @@ def monitor(task_name, refresh_interval=3):
     return 0
 
 
+def show_summary():
+    """Show summary of all Spring AI tasks."""
+    tasks = [
+        'spring-ai-starter',
+        'spring-ai-official',
+        'spring-ai-alibaba',
+        'spring-ai-examples'
+    ]
+
+    print("=" * 70)
+    print("📊 SPRING AI SCRAPING SUMMARY")
+    print("=" * 70)
+    print()
+
+    all_completed = True
+
+    for task in tasks:
+        progress_file = f"output/{task}_progress.json"
+        skill_dir = f"output/{task}"
+        zip_file = f"output/{task}.zip"
+
+        print(f"📦 {task}")
+        print("-" * 70)
+
+        # Check progress
+        if os.path.exists(progress_file):
+            try:
+                with open(progress_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                status = data.get('status', 'unknown')
+                status_icon = get_status_icon(status)
+                elapsed = data.get('elapsed_seconds', 0)
+
+                print(f"  Status: {status_icon} {status.upper()}")
+                print(f"  Elapsed: {format_time(elapsed)}")
+
+                if status != 'completed':
+                    all_completed = False
+            except:
+                print(f"  Status: ❓ UNKNOWN (error reading progress file)")
+                all_completed = False
+        else:
+            print(f"  Status: ⏭️  NOT STARTED")
+            all_completed = False
+
+        # Check skill directory
+        if os.path.exists(skill_dir):
+            skill_file = f"{skill_dir}/SKILL.md"
+            if os.path.exists(skill_file):
+                size = os.path.getsize(skill_file) / 1024  # KB
+                print(f"  Skill: ✅ SKILL.md ({size:.1f} KB)")
+            else:
+                print(f"  Skill: ❌ Missing SKILL.md")
+        else:
+            print(f"  Skill: ❌ Directory not found")
+
+        # Check zip package
+        if os.path.exists(zip_file):
+            size = os.path.getsize(zip_file) / 1024  # KB
+            print(f"  Package: ✅ {task}.zip ({size:.1f} KB)")
+        else:
+            print(f"  Package: ❌ {task}.zip not found")
+            all_completed = False
+
+        print()
+
+    print("=" * 70)
+    if all_completed:
+        print("✅ All four skills completed and packaged!")
+        print()
+        print("🚀 Next step: Upload to Claude")
+        print("   Visit: https://claude.ai/skills")
+        return 0
+    else:
+        print("⚠️  Some tasks incomplete or packages missing")
+        print()
+        print("💡 To fix:")
+        print("   python run_springai.py --skip-existing --force-retry")
+        return 1
+
+
 def main():
     """Main entry point."""
     if len(sys.argv) < 2:
-        # No argument - auto-detect mode
-        print("🔍 Auto-detect mode - searching for active tasks...")
+        # No argument - show summary by default
+        print("🔍 Showing summary of all tasks...")
         print()
-        return monitor("auto")
+        return show_summary()
 
     task_name = sys.argv[1]
+
+    # Check for --summary or --all flag
+    if task_name in ['--summary', '--all', '-s']:
+        return show_summary()
 
     # Support shorthand
     if not task_name.startswith('spring-ai'):
@@ -389,7 +480,8 @@ def main():
         possible_tasks = [
             'spring-ai-starter',
             'spring-ai-official',
-            'spring-ai-alibaba'
+            'spring-ai-alibaba',
+            'spring-ai-examples'
         ]
         matches = [t for t in possible_tasks if task_name in t]
         if len(matches) == 1:
