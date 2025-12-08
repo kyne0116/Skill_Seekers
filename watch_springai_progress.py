@@ -16,6 +16,7 @@ Usage:
     python watch_springai_progress.py spring-ai-official
     python watch_springai_progress.py spring-ai-alibaba
     python watch_springai_progress.py spring-ai-examples
+    python watch_springai_progress.py spring-ai-alibaba-graph-core
 """
 
 import sys
@@ -251,6 +252,8 @@ def select_task_interactive():
         print("  - spring-ai-starter")
         print("  - spring-ai-official")
         print("  - spring-ai-alibaba")
+        print("  - spring-ai-examples")
+        print("  - spring-ai-alibaba-graph-core")
         print()
         print("To start a task, run:")
         print("  skill-seekers unified --config configs/spring_ai_starter.json")
@@ -385,7 +388,8 @@ def show_summary():
         'spring-ai-starter',
         'spring-ai-official',
         'spring-ai-alibaba',
-        'spring-ai-examples'
+        'spring-ai-examples',
+        'spring-ai-alibaba-graph-core'
     ]
 
     print("=" * 70)
@@ -447,16 +451,12 @@ def show_summary():
 
     print("=" * 70)
     if all_completed:
-        print("✅ All four skills completed and packaged!")
+        print("✅ All five skills completed and packaged!")
         print()
         print("🚀 Next step: Upload to Claude")
         print("   Visit: https://claude.ai/skills")
         return 0
     else:
-        print("⚠️  Some tasks incomplete or packages missing")
-        print()
-        print("💡 To fix:")
-        print("   python run_springai.py --skip-existing --force-retry")
         return 1
 
 
@@ -481,7 +481,8 @@ def main():
             'spring-ai-starter',
             'spring-ai-official',
             'spring-ai-alibaba',
-            'spring-ai-examples'
+            'spring-ai-examples',
+            'spring-ai-alibaba-graph-core'
         ]
         matches = [t for t in possible_tasks if task_name in t]
         if len(matches) == 1:

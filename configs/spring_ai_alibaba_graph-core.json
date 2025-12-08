@@ -1,0 +1,21 @@
+{
+  "name": "spring-ai-alibaba-graph-core",
+  "repo": "alibaba/spring-ai-alibaba",
+  "description": "Spring AI Alibaba Graph Core - 知识图谱核心模块，提供图数据库集成、图查询、图分析等功能",
+  "github_token": null,
+  "include_issues": false,
+  "max_issues": 0,
+  "include_changelog": false,
+  "include_releases": false,
+  "include_code": true,
+  "file_patterns": [
+    "spring-ai-alibaba-graph-core/**/*.java",
+    "spring-ai-alibaba-graph-core/**/*.md",
+    "spring-ai-alibaba-graph-core/**/README.md",
+    "spring-ai-alibaba-graph-core/**/README_CN.md",
+    "spring-ai-alibaba-graph-core/**/pom.xml",
+    "spring-ai-alibaba-graph-core/**/*.yml",
+    "spring-ai-alibaba-graph-core/**/*.yaml",
+    "spring-ai-alibaba-graph-core/**/*.properties"
+  ]
+}

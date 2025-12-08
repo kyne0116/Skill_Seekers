@@ -8,6 +8,7 @@ Executes all Spring AI scraping configurations:
 - Phase 2: spring_ai_official (Complete Framework - 15-20 min)
 - Phase 3: spring_ai_alibaba (Full Ecosystem - 30-60 min)
 - Phase 4: spring_ai_examples (Examples Repository - 3-5 min)
+- Phase 5: spring_ai_alibaba_graph-core (Graph Core Module - 2-3 min)
 
 Usage:
     python run_springai.py
@@ -57,6 +58,12 @@ PHASES = [
         "config": "configs/spring_ai_examples.json",
         "description": "Examples Repository (3-5 min)",
         "estimated_time": 300  # 5 minutes
+    },
+    {
+        "name": "spring-ai-alibaba-graph-core",
+        "config": "configs/spring_ai_alibaba_graph-core.json",
+        "description": "Graph Core Module (2-3 min)",
+        "estimated_time": 180  # 3 minutes
     }
 ]
 
@@ -236,11 +243,11 @@ def run_phase(phase, skip_existing=False, force_retry=False):
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description='Run Spring AI scraping (4 phases)',
+        description='Run Spring AI scraping (5 phases)',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Run all four phases
+  # Run all five phases
   python run_springai.py
 
   # Run only phase 1 (quick start)
@@ -255,13 +262,16 @@ Examples:
   # Run only phase 4 (examples repository)
   python run_springai.py --phase 4
 
+  # Run only phase 5 (graph-core module)
+  python run_springai.py --phase 5
+
   # Auto-retry failed phases
   python run_springai.py --skip-existing --force-retry
         """
     )
 
     parser.add_argument('--phase', type=int, action='append',
-                       help='Run specific phase(s) only (1-4)')
+                       help='Run specific phase(s) only (1-5)')
     parser.add_argument('--skip-existing', action='store_true',
                        help='Skip phases with existing output')
     parser.add_argument('--force-retry', action='store_true',
@@ -273,7 +283,7 @@ Examples:
 
     # Determine which phases to run
     if args.phase:
-        phases_to_run = [PHASES[p-1] for p in args.phase if 1 <= p <= 4]
+        phases_to_run = [PHASES[p-1] for p in args.phase if 1 <= p <= 5]
     else:
         phases_to_run = PHASES
 

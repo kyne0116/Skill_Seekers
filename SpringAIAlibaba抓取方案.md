@@ -4,15 +4,15 @@
 
 **适用工具**: Skill Seekers v2.0.0
 **抓取方式**: 全自动 + 实时进度监控
-**总用时**: 60-100 分钟（一键完成四个方案）
+**总用时**: 65-105 分钟（一键完成五个方案）
 
 ---
 
 ## ⚡ 推荐方案: 一键执行（80% 用户选择这个！）
 
 ### 适用场景
-- ✅ 想要一次性获取所有四个技能（入门 + 框架 + 生态 + 示例）
-- ✅ 不想手动运行四次命令
+- ✅ 想要一次性获取所有五个技能（入门 + 框架 + 生态 + 示例 + 图谱）
+- ✅ 不想手动运行五次命令
 - ✅ 需要实时查看抓取进度
 - ✅ 失败后自动重试
 
@@ -130,7 +130,8 @@ Elapsed: 2m 15s
 | **方案2: 完整框架** | 15-20 分钟 | 完整文档 + 源码分析 |
 | **方案3: 完整生态** | 30-60 分钟 | 阿里云生态 + Agent 框架 |
 | **方案4: 示例仓库** | 3-5 分钟 | Examples 仓库代码示例 |
-| **总计** | **60-100 分钟** | 全自动执行 |
+| **方案5: 图谱核心** | 2-3 分钟 | Graph Core 知识图谱模块 |
+| **总计** | **65-105 分钟** | 全自动执行 |
 
 💡 **提示**: 去喝杯咖啡，脚本会自动完成所有工作！
 
@@ -148,14 +149,15 @@ Elapsed: 2m 15s
 
 ### 完成后
 
-**所有阶段成功后，你会得到四个技能包:**
+**所有阶段成功后，你会得到五个技能包:**
 
 ```
 output/
 ├── spring-ai-starter.zip         # 方案1: 快速入门
 ├── spring-ai-official.zip        # 方案2: 完整框架
 ├── spring-ai-alibaba.zip         # 方案3: 完整生态
-└── spring-ai-examples.zip        # 方案4: 示例仓库
+├── spring-ai-examples.zip        # 方案4: 示例仓库
+└── spring-ai-alibaba-graph-core.zip  # 方案5: 图谱核心
 ```
 
 **上传到 Claude:**
@@ -170,6 +172,7 @@ output/
 - "如何用 Spring AI Alibaba 调用通义千问？"
 - "给我一个 Spring AI 聊天机器人的完整示例"
 - "Spring AI 的 ChatClient 怎么配置？"
+- "Spring AI Alibaba Graph Core 知识图谱怎么使用？"
 
 ---
 
@@ -367,7 +370,7 @@ python run_springai.py --skip-existing --force-retry
 
 ---
 
-## 📚 四种抓取方案详解
+## 📚 五种抓取方案详解
 
 如果你想单独运行某个方案，可以使用以下命令:
 
@@ -462,6 +465,30 @@ skill-seekers package output/spring-ai-examples/
 
 ---
 
+### 🌐 方案5：图谱核心（知识图谱模块）
+
+**适用场景:** 需要使用知识图谱功能，进行图数据库集成和图查询
+**用时:** 2-3 分钟
+**内容:** Spring AI Alibaba Graph Core 模块代码
+
+```bash
+# 执行抓取（GitHub-only，专注 graph-core 子目录）
+skill-seekers github --config configs/spring_ai_alibaba_graph-core.json
+
+# 打包
+skill-seekers package output/spring-ai-alibaba-graph-core/
+```
+
+**生成文件:** `output/spring-ai-alibaba-graph-core.zip`
+
+**包含内容:**
+- Graph Core 核心 Java 代码
+- 知识图谱相关配置
+- 图数据库集成示例
+- Graph API 文档
+
+---
+
 ## 🎯 方案对比
 
 | 方案 | 用时 | 页面数 | 适用场景 | 包含内容 |
@@ -470,8 +497,9 @@ skill-seekers package output/spring-ai-examples/
 | 🔧 完整框架 | 15-20 分钟 | ~200 | 经验开发者 | 完整文档 + 源码 |
 | 🏢 完整生态 | 30-60 分钟 | ~500+ | 企业级 | 阿里云集成 + 高级功能 |
 | 📦 示例仓库 | 3-5 分钟 | GitHub | 实战参考 | 完整示例代码 |
+| 🌐 图谱核心 | 2-3 分钟 | GitHub | 知识图谱 | Graph Core 模块 |
 
-💡 **推荐策略:** 从方案1开始，根据需要逐步升级到方案2或方案3，最后抓取方案4作为代码参考。
+💡 **推荐策略:** 从方案1开始，根据需要逐步升级到方案2或方案3，然后抓取方案4作为代码参考，如需知识图谱功能则抓取方案5。
 
 ---
 
@@ -582,7 +610,7 @@ python run_springai.py --skip-existing --force-retry
 # 终端 2:
 python watch_springai_progress.py
 
-# 3. 等待完成（50-90 分钟），去喝杯咖啡！
+# 3. 等待完成（65-105 分钟），去喝杯咖啡！
 ```
 
 **完成后上传到 Claude，立即开始使用！** 🎉
