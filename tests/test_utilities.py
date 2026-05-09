@@ -3,21 +3,22 @@
 Tests for cli/utils.py utility functions
 """
 
-import unittest
-import tempfile
 import os
+import tempfile
+import unittest
 import zipfile
 from pathlib import Path
-import sys
 
 from skill_seekers.cli.utils import (
-    has_api_key,
+    format_file_size,
     get_api_key,
     get_upload_url,
-    format_file_size,
+    has_api_key,
+    print_upload_instructions,
+    retry_with_backoff,
+    retry_with_backoff_async,
     validate_skill_directory,
     validate_zip_file,
-    print_upload_instructions
 )
 
 
@@ -26,51 +27,51 @@ class TestAPIKeyFunctions(unittest.TestCase):
 
     def setUp(self):
         """Store original API key state"""
-        self.original_api_key = os.environ.get('ANTHROPIC_API_KEY')
+        self.original_api_key = os.environ.get("ANTHROPIC_API_KEY")
 
     def tearDown(self):
         """Restore original API key state"""
         if self.original_api_key:
-            os.environ['ANTHROPIC_API_KEY'] = self.original_api_key
-        elif 'ANTHROPIC_API_KEY' in os.environ:
-            del os.environ['ANTHROPIC_API_KEY']
+            os.environ["ANTHROPIC_API_KEY"] = self.original_api_key
+        elif "ANTHROPIC_API_KEY" in os.environ:
+            del os.environ["ANTHROPIC_API_KEY"]
 
     def test_has_api_key_when_set(self):
         """Test has_api_key returns True when key is set"""
-        os.environ['ANTHROPIC_API_KEY'] = 'sk-ant-test-key'
+        os.environ["ANTHROPIC_API_KEY"] = "sk-ant-test-key"
         self.assertTrue(has_api_key())
 
     def test_has_api_key_when_not_set(self):
         """Test has_api_key returns False when key is not set"""
-        if 'ANTHROPIC_API_KEY' in os.environ:
-            del os.environ['ANTHROPIC_API_KEY']
+        if "ANTHROPIC_API_KEY" in os.environ:
+            del os.environ["ANTHROPIC_API_KEY"]
         self.assertFalse(has_api_key())
 
     def test_has_api_key_when_empty_string(self):
         """Test has_api_key returns False when key is empty string"""
-        os.environ['ANTHROPIC_API_KEY'] = ''
+        os.environ["ANTHROPIC_API_KEY"] = ""
         self.assertFalse(has_api_key())
 
     def test_has_api_key_when_whitespace_only(self):
         """Test has_api_key returns False when key is whitespace"""
-        os.environ['ANTHROPIC_API_KEY'] = '   '
+        os.environ["ANTHROPIC_API_KEY"] = "   "
         self.assertFalse(has_api_key())
 
     def test_get_api_key_returns_key(self):
         """Test get_api_key returns the actual key"""
-        os.environ['ANTHROPIC_API_KEY'] = 'sk-ant-test-key'
-        self.assertEqual(get_api_key(), 'sk-ant-test-key')
+        os.environ["ANTHROPIC_API_KEY"] = "sk-ant-test-key"
+        self.assertEqual(get_api_key(), "sk-ant-test-key")
 
     def test_get_api_key_returns_none_when_not_set(self):
         """Test get_api_key returns None when not set"""
-        if 'ANTHROPIC_API_KEY' in os.environ:
-            del os.environ['ANTHROPIC_API_KEY']
+        if "ANTHROPIC_API_KEY" in os.environ:
+            del os.environ["ANTHROPIC_API_KEY"]
         self.assertIsNone(get_api_key())
 
     def test_get_api_key_strips_whitespace(self):
         """Test get_api_key strips whitespace from key"""
-        os.environ['ANTHROPIC_API_KEY'] = '  sk-ant-test-key  '
-        self.assertEqual(get_api_key(), 'sk-ant-test-key')
+        os.environ["ANTHROPIC_API_KEY"] = "  sk-ant-test-key  "
+        self.assertEqual(get_api_key(), "sk-ant-test-key")
 
 
 class TestGetUploadURL(unittest.TestCase):
@@ -163,7 +164,7 @@ class TestValidateZipFile(unittest.TestCase):
             zip_path = Path(tmpdir) / "test-skill.zip"
 
             # Create a real zip file
-            with zipfile.ZipFile(zip_path, 'w') as zf:
+            with zipfile.ZipFile(zip_path, "w") as zf:
                 zf.writestr("SKILL.md", "# Test")
 
             is_valid, error = validate_zip_file(zip_path)
@@ -185,7 +186,7 @@ class TestValidateZipFile(unittest.TestCase):
 
     def test_wrong_extension(self):
         """Test validation of file with wrong extension"""
-        with tempfile.NamedTemporaryFile(suffix='.txt') as tmpfile:
+        with tempfile.NamedTemporaryFile(suffix=".txt") as tmpfile:
             is_valid, error = validate_zip_file(tmpfile.name)
             self.assertFalse(is_valid)
             self.assertIn("not a .zip file", error.lower())
@@ -218,5 +219,113 @@ class TestPrintUploadInstructions(unittest.TestCase):
                 self.fail(f"print_upload_instructions raised {e}")
 
 
-if __name__ == '__main__':
+class TestRetryWithBackoff(unittest.TestCase):
+    """Test retry_with_backoff function"""
+
+    def test_successful_operation_first_try(self):
+        """Test operation that succeeds on first try"""
+        call_count = 0
+
+        def operation():
+            nonlocal call_count
+            call_count += 1
+            return "success"
+
+        result = retry_with_backoff(operation, max_attempts=3)
+        self.assertEqual(result, "success")
+        self.assertEqual(call_count, 1)
+
+    def test_successful_operation_after_retry(self):
+        """Test operation that fails once then succeeds"""
+        call_count = 0
+
+        def operation():
+            nonlocal call_count
+            call_count += 1
+            if call_count < 2:
+                raise ConnectionError("Temporary failure")
+            return "success"
+
+        result = retry_with_backoff(operation, max_attempts=3, base_delay=0.01)
+        self.assertEqual(result, "success")
+        self.assertEqual(call_count, 2)
+
+    def test_all_retries_fail(self):
+        """Test operation that fails all retries"""
+        call_count = 0
+
+        def operation():
+            nonlocal call_count
+            call_count += 1
+            raise ConnectionError("Persistent failure")
+
+        with self.assertRaises(ConnectionError):
+            retry_with_backoff(operation, max_attempts=3, base_delay=0.01)
+        self.assertEqual(call_count, 3)
+
+    def test_exponential_backoff_timing(self):
+        """Test that retry delays are applied"""
+        import time
+
+        call_times = []
+
+        def operation():
+            call_times.append(time.time())
+            if len(call_times) < 3:
+                raise ConnectionError("Fail")
+            return "success"
+
+        retry_with_backoff(operation, max_attempts=3, base_delay=0.1)
+
+        # Verify we had 3 attempts (2 retries)
+        self.assertEqual(len(call_times), 3)
+
+        # Check that delays were applied (total time should be at least sum of delays)
+        # Expected delays: 0.1s + 0.2s = 0.3s minimum
+        total_time = call_times[-1] - call_times[0]
+        self.assertGreater(total_time, 0.25)  # Lenient threshold for CI timing variance
+
+
+class TestRetryWithBackoffAsync(unittest.TestCase):
+    """Test retry_with_backoff_async function"""
+
+    def test_async_successful_operation(self):
+        """Test async operation that succeeds"""
+        import asyncio
+
+        async def operation():
+            return "async success"
+
+        result = asyncio.run(retry_with_backoff_async(operation, max_attempts=3))
+        self.assertEqual(result, "async success")
+
+    def test_async_retry_then_success(self):
+        """Test async operation that fails then succeeds"""
+        import asyncio
+
+        call_count = 0
+
+        async def operation():
+            nonlocal call_count
+            call_count += 1
+            if call_count < 2:
+                raise ConnectionError("Async failure")
+            return "async success"
+
+        result = asyncio.run(retry_with_backoff_async(operation, max_attempts=3, base_delay=0.01))
+        self.assertEqual(result, "async success")
+        self.assertEqual(call_count, 2)
+
+    def test_async_all_retries_fail(self):
+        """Test async operation that fails all retries"""
+        import asyncio
+
+        async def operation():
+            raise ConnectionError("Persistent async failure")
+
+        with self.assertRaises(ConnectionError):
+            asyncio.run(retry_with_backoff_async(operation, max_attempts=2, base_delay=0.01))
+
+
+if __name__ == "__main__":
     unittest.main()

@@ -76,6 +76,21 @@ git push origin my-feature
 
 ---
 
+## Related Repositories
+
+Skill Seekers spans multiple repositories. Make sure you're contributing to the right one:
+
+| What you want to work on | Repository |
+|--------------------------|-----------|
+| Core CLI, scrapers, MCP tools, adaptors | [Skill_Seekers](https://github.com/yusufkaraaslan/Skill_Seekers) (this repo) |
+| Website, docs, UI/UX | [skillseekersweb](https://github.com/yusufkaraaslan/skillseekersweb) |
+| Preset configs, community configs | [skill-seekers-configs](https://github.com/yusufkaraaslan/skill-seekers-configs) |
+| GitHub Action integration | [skill-seekers-action](https://github.com/yusufkaraaslan/skill-seekers-action) |
+| Claude Code plugin | [skill-seekers-plugin](https://github.com/yusufkaraaslan/skill-seekers-plugin) |
+| Homebrew formula | [homebrew-skill-seekers](https://github.com/yusufkaraaslan/homebrew-skill-seekers) |
+
+---
+
 ## Code of Conduct
 
 This project and everyone participating in it is governed by our commitment to fostering an open and welcoming environment. Please be respectful and constructive in all interactions.
@@ -324,6 +339,62 @@ def scrape_page(url: str, selectors: dict) -> dict:
     pass
 ```
 
+### Code Quality Tools
+
+We use **Ruff** for linting and code formatting. Ruff is a fast Python linter that combines multiple tools (Flake8, isort, Black, etc.) into one.
+
+**Running Ruff:**
+
+```bash
+# Check for linting errors
+uvx ruff check src/ tests/
+
+# Auto-fix issues
+uvx ruff check --fix src/ tests/
+
+# Format code
+uvx ruff format src/ tests/
+```
+
+**Common Ruff Rules:**
+- **SIM102** - Simplify nested if statements (use `and` instead)
+- **SIM117** - Combine multiple `with` statements
+- **B904** - Use `from e` for proper exception chaining
+- **SIM113** - Use enumerate instead of manual counters
+- **B007** - Use `_` for unused loop variables
+- **ARG002** - Remove unused function arguments
+
+**CI/CD Integration:**
+
+All pull requests automatically run:
+1. `ruff check` - Linting validation
+2. `ruff format --check` - Format validation
+3. `pytest` - Test suite
+
+Make sure all checks pass before submitting your PR:
+
+```bash
+# Run the same checks as CI
+uvx ruff check src/ tests/
+uvx ruff format --check src/ tests/
+pytest tests/ -v
+```
+
+**Pre-commit Setup (Optional):**
+
+You can set up pre-commit hooks to automatically run Ruff before each commit:
+
+```bash
+# Install pre-commit
+pip install pre-commit
+
+# Set up hooks (if .pre-commit-config.yaml exists)
+pre-commit install
+
+# Run manually
+pre-commit run --all-files
+```
+
 ---
 
 ## Testing
@@ -385,20 +456,63 @@ def test_config_validation_with_missing_fields():
 
 ```
 Skill_Seekers/
-├── cli/                    # CLI tools
-│   ├── doc_scraper.py     # Main scraper
-│   ├── package_skill.py   # Packager
-│   ├── upload_skill.py    # Uploader
-│   └── utils.py           # Shared utilities
-├── mcp/                   # MCP server
-│   ├── server.py          # MCP implementation
-│   └── requirements.txt   # MCP dependencies
-├── configs/               # Framework configs
-├── docs/                  # Documentation
-├── tests/                 # Test suite
-└── .github/              # GitHub config
-    └── workflows/         # CI/CD workflows
+├── src/skill_seekers/      # Main package (src/ layout)
+│   ├── cli/                # CLI commands and entry points
+│   │   ├── main.py         # Unified CLI entry (COMMAND_MODULES dict)
+│   │   ├── source_detector.py  # Auto-detects source type
+│   │   ├── create_command.py   # Unified `create` command routing
+│   │   ├── config_validator.py # VALID_SOURCE_TYPES set
+│   │   ├── unified_scraper.py  # Multi-source orchestrator
+│   │   ├── unified_skill_builder.py # Pairwise synthesis + generic merge
+│   │   ├── doc_scraper.py      # Documentation (web)
+│   │   ├── github_scraper.py   # GitHub repos
+│   │   ├── pdf_scraper.py      # PDF files
+│   │   ├── word_scraper.py     # Word (.docx)
+│   │   ├── epub_scraper.py     # EPUB books
+│   │   ├── video_scraper.py    # Video (YouTube, Vimeo, local)
+│   │   ├── codebase_scraper.py # Local codebases
+│   │   ├── jupyter_scraper.py  # Jupyter Notebooks
+│   │   ├── html_scraper.py     # Local HTML files
+│   │   ├── openapi_scraper.py  # OpenAPI/Swagger specs
+│   │   ├── asciidoc_scraper.py # AsciiDoc files
+│   │   ├── pptx_scraper.py     # PowerPoint files
+│   │   ├── rss_scraper.py      # RSS/Atom feeds
+│   │   ├── manpage_scraper.py  # Man pages
+│   │   ├── confluence_scraper.py # Confluence wikis
+│   │   ├── notion_scraper.py   # Notion pages
+│   │   ├── chat_scraper.py     # Slack/Discord exports
+│   │   ├── adaptors/          # Platform adaptors (Strategy pattern)
+│   │   ├── arguments/         # CLI argument definitions (one per source)
+│   │   ├── parsers/           # Subcommand parsers (one per source)
+│   │   └── storage/           # Cloud storage adaptors
+│   ├── mcp/                # MCP server + tools
+│   └── sync/               # Sync monitoring
+├── configs/                # Preset JSON scraping configs
+├── docs/                   # Documentation
+├── tests/                  # 115+ test files (pytest)
+└── .github/               # GitHub config
+    └── workflows/          # CI/CD workflows
 ```
+
+**Scraper pattern (17 source types):** Each source type has `cli/<type>_scraper.py` (with `<Type>ToSkillConverter` class + `main()`), `arguments/<type>.py`, and `parsers/<type>_parser.py`. Register new types in: `parsers/__init__.py` PARSERS list, `main.py` COMMAND_MODULES dict, `config_validator.py` VALID_SOURCE_TYPES set.
+
+### UML Architecture
+
+Full UML class diagrams are maintained in StarUML and synced from source code:
+
+- **[docs/UML_ARCHITECTURE.md](docs/UML_ARCHITECTURE.md)** - Overview with embedded PNG diagrams
+- **[docs/UML/skill_seekers.mdj](docs/UML/skill_seekers.mdj)** - StarUML project (open with [StarUML](https://staruml.io/))
+- **[docs/UML/exports/](docs/UML/exports/)** - 14 PNG exports (package overview + 13 class diagrams)
+- **[docs/UML/html/](docs/UML/html/index.html/index.html)** - HTML API reference
+
+**Key design patterns documented in UML:**
+- Strategy + Factory in Adaptors (SkillAdaptor ABC + 20+ implementations)
+- Strategy + Factory in Storage (BaseStorageAdaptor + S3/GCS/Azure)
+- Template Method in Parsers (SubcommandParser + 28 subclasses)
+- Template Method in Analysis (BasePatternDetector + 10 GoF detectors)
+- Command pattern in CLI (CLIDispatcher + COMMAND_MODULES lazy dispatch)
+
+When adding new classes or modules, please update the corresponding UML diagram to keep architecture docs in sync.
 
 ---
 

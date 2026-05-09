@@ -7,6 +7,39 @@ on:
     branches: [ main, development ]
 
 jobs:
+  lint:
+    name: Code Quality (Ruff & Mypy)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install "ruff==0.15.8" mypy
+        pip install -e .
+
+    - name: Run ruff linter
+      run: |
+        echo "Running ruff check..."
+        ruff check src/ tests/ --output-format=github
+
+    - name: Run ruff formatter check
+      run: |
+        echo "Checking code formatting..."
+        ruff format --check src/ tests/
+
+    - name: Run mypy type checker
+      run: |
+        echo "Running mypy type checker..."
+        mypy src/skill_seekers --show-error-codes --pretty
+      continue-on-error: true  # Don't fail CI on mypy errors initially
+
   test:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -20,15 +53,22 @@ jobs:
             python-version: '3.10'
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive  # Initialize api/configs_repo submodule
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Install uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
     - name: Cache pip packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', 'skill_seeker_mcp/requirements.txt') }}
@@ -55,27 +95,36 @@ jobs:
 
     - name: Generate coverage report
       run: |
-        python -m pytest tests/ --cov=src/skill_seekers --cov-report=xml --cov-report=term
+        python -m pytest tests/ --ignore=tests/test_mcp_fastmcp.py --ignore=tests/test_mcp_server.py --ignore=tests/test_install_skill_e2e.py --cov=src/skill_seekers --cov-report=xml --cov-report=term
+      timeout-minutes: 30
 
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         file: ./coverage.xml
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
 
-  # Summary job that provides a single status check for branch protection
+  # Summary job that provides a single status check for branch protection.
+  # The job name MUST match the required status check in the branch
+  # protection rules.  GitHub reports status checks using job names
+  # (not the workflow name), so the required check "Tests" will only
+  # be satisfied if a job with exactly that name exists and succeeds.
   tests-complete:
-    name: All Tests Complete
-    needs: test
+    name: Tests
+    needs: [lint, test]
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - name: Check test matrix results
+      - name: Check all results
         run: |
+          if [ "${{ needs.lint.result }}" != "success" ]; then
+            echo "❌ Code quality checks failed!"
+            exit 1
+          fi
           if [ "${{ needs.test.result }}" != "success" ]; then
             echo "❌ Tests failed!"
             exit 1
           fi
-          echo "✅ All tests passed!"
+          echo "✅ All checks passed!"

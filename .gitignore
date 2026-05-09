@@ -20,6 +20,11 @@ wheels/
 .installed.cfg
 *.egg
 
+# Environment variables (secrets)
+.env
+.env.local
+.env.*.local
+
 # Virtual Environment
 venv/
 ENV/
@@ -28,6 +33,9 @@ env/
 # Output directory
 output/
 *.zip
+
+# Skill Seekers cache (intermediate files)
+.skillseeker-cache/
 
 # IDE
 .vscode/
@@ -58,3 +66,10 @@ htmlcov/
 
 # Build artifacts
 .build/
+skill-seekers-configs/
+.claude/skills
+.mcp.json
+!/.mcp.json
+!distribution/claude-plugin/.mcp.json
+settings.json
+USER_GUIDE.md
