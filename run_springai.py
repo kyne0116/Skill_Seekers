@@ -190,8 +190,8 @@ def run_phase(phase, skip_existing=False, force_retry=False):
 
     print()
 
-    # Execute scraping
-    cmd = ["skill-seekers", "unified", "--config", phase['config']]
+    # Execute scraping (v3.6.0+: unified → create <config-path> as positional source)
+    cmd = ["skill-seekers", "create", phase['config']]
 
     try:
         result = subprocess.run(

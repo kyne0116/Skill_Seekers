@@ -68,6 +68,7 @@ htmlcov/
 .build/
 skill-seekers-configs/
 .claude/skills
+.claude/scheduled_tasks.lock
 .mcp.json
 !/.mcp.json
 !distribution/claude-plugin/.mcp.json
