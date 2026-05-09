@@ -1,0 +1,91 @@
+{
+  "name": "stagehand",
+  "description": "Stagehand (browserbase/stagehand) - production-grade browser automation framework with natural-language-driven act() / observe() / extract() / agent() primitives, built on Playwright. Use for exploratory browser automation in Domain Agent layer (long-tail government / industry sites), where deterministic recorded skills don't apply. Strict scope: do NOT use Stagehand to replace already-recorded business skills (fssc / oa / niafif).",
+  "merge_mode": "claude-enhanced",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://docs.stagehand.dev/",
+      "extract_api": true,
+      "max_pages": 300,
+      "selectors": {
+        "main_content": "article, main, div[role='main']",
+        "title": "h1",
+        "code_blocks": "pre code"
+      },
+      "url_patterns": {
+        "include": [
+          "/"
+        ],
+        "exclude": [
+          "/blog/",
+          "/llms.txt"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "quickstart",
+          "installation",
+          "first-script",
+          "introduction"
+        ],
+        "act": [
+          "act",
+          "actions"
+        ],
+        "observe": [
+          "observe",
+          "observation"
+        ],
+        "extract": [
+          "extract",
+          "extraction",
+          "schema"
+        ],
+        "agent": [
+          "agent",
+          "agents",
+          "computer-use"
+        ],
+        "configuration": [
+          "configuration",
+          "config",
+          "options"
+        ],
+        "browserbase": [
+          "browserbase",
+          "remote",
+          "cloud"
+        ],
+        "examples": [
+          "examples",
+          "use-cases",
+          "guides"
+        ],
+        "reference": [
+          "reference",
+          "api"
+        ]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "browserbase/stagehand",
+      "include_code": true,
+      "code_analysis_depth": "surface",
+      "include_issues": false,
+      "max_issues": 50,
+      "include_changelog": true,
+      "include_releases": true,
+      "file_patterns": [
+        "lib/**/*.ts",
+        "types/**/*.ts",
+        "examples/**/*.ts",
+        "evals/**/*.ts",
+        "**/*.md",
+        "**/README.md"
+      ]
+    }
+  ]
+}

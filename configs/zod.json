@@ -1,0 +1,117 @@
+{
+  "name": "zod",
+  "description": "Zod (colinhacks/zod) v4 - TypeScript-first schema validation library. Covers schema definitions (z.object / z.string / z.union / z.discriminatedUnion / z.lazy), parsing (parse / safeParse), refinement, transformation, error handling, JSON Schema export, codecs, ecosystem integrations (React Hook Form, tRPC, OpenAPI). Use for L1 plan output schema, L2 contentProducer output validation, MCP tool inputSchema, Mastra createStep input/output schema - the universal schema layer across the three-layer architecture.",
+  "merge_mode": "claude-enhanced",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://zod.dev/",
+      "extract_api": true,
+      "max_pages": 200,
+      "selectors": {
+        "main_content": "article, main, div[role='main']",
+        "title": "h1",
+        "code_blocks": "pre code"
+      },
+      "url_patterns": {
+        "include": [
+          "/"
+        ],
+        "exclude": [
+          "/blog/",
+          "/v3/",
+          "/llms.txt"
+        ]
+      },
+      "categories": {
+        "intro": [
+          "intro",
+          "introduction",
+          "getting-started"
+        ],
+        "basic_usage": [
+          "basics",
+          "basic-usage",
+          "primitives"
+        ],
+        "schemas": [
+          "schemas",
+          "object",
+          "array",
+          "union",
+          "discriminated-union",
+          "intersection",
+          "record",
+          "tuple",
+          "promise",
+          "literal",
+          "enum",
+          "nativeEnum"
+        ],
+        "parsing": [
+          "parse",
+          "safe-parse",
+          "parsing"
+        ],
+        "refinement": [
+          "refine",
+          "refinement",
+          "superRefine",
+          "transform"
+        ],
+        "errors": [
+          "error",
+          "customizing-errors",
+          "formatting-errors",
+          "ZodError"
+        ],
+        "metadata": [
+          "metadata",
+          "registries"
+        ],
+        "json_schema": [
+          "json-schema",
+          "to-json"
+        ],
+        "codecs": [
+          "codec",
+          "codecs"
+        ],
+        "ecosystem": [
+          "ecosystem",
+          "integrations",
+          "react-hook-form",
+          "trpc",
+          "openapi"
+        ],
+        "library_authors": [
+          "library-authors",
+          "for-library"
+        ],
+        "migration": [
+          "migration",
+          "v4",
+          "changelog"
+        ]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "colinhacks/zod",
+      "include_code": true,
+      "code_analysis_depth": "surface",
+      "include_issues": false,
+      "max_issues": 30,
+      "include_changelog": true,
+      "include_releases": true,
+      "file_patterns": [
+        "packages/zod/src/**/*.ts",
+        "packages/zod-mini/src/**/*.ts",
+        "examples/**/*.ts",
+        "**/*.md",
+        "**/README.md"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "name": "playwright",
+  "description": "Playwright (microsoft/playwright) Node.js / TypeScript edition - browser automation library and Playwright Test framework. Covers Page / Locator / Frame / Browser APIs, codegen, auto-waiting, network interception, fixtures, parallel execution, trace viewer, CI integration. Use for formal recorded business browser skills (fssc / oa / niafif), Stagehand integration substrate (Stagehand is built on Playwright), and §52 recording governance pipeline.",
+  "merge_mode": "claude-enhanced",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://playwright.dev/docs/",
+      "extract_api": true,
+      "max_pages": 500,
+      "selectors": {
+        "main_content": "article, main, div[role='main']",
+        "title": "h1",
+        "code_blocks": "pre code"
+      },
+      "url_patterns": {
+        "include": [
+          "/docs/"
+        ],
+        "exclude": [
+          "/python/",
+          "/java/",
+          "/dotnet/",
+          "/blog/",
+          "/community/",
+          "/llms.txt"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "intro",
+          "writing-tests",
+          "running-tests",
+          "trace-viewer",
+          "test-generator",
+          "ci"
+        ],
+        "core_concepts": [
+          "pages",
+          "locators",
+          "frames",
+          "browsers",
+          "browser-contexts"
+        ],
+        "actions": [
+          "input",
+          "navigations",
+          "downloads",
+          "videos",
+          "screenshots",
+          "events",
+          "evaluating"
+        ],
+        "auto_waiting": [
+          "actionability",
+          "auto-waiting"
+        ],
+        "assertions": [
+          "test-assertions",
+          "assertions"
+        ],
+        "config": [
+          "test-configuration",
+          "test-projects",
+          "test-fixtures",
+          "test-parameterize"
+        ],
+        "fixtures": [
+          "test-fixtures",
+          "fixtures"
+        ],
+        "auth": [
+          "auth",
+          "authentication"
+        ],
+        "network": [
+          "network",
+          "mock",
+          "api-testing"
+        ],
+        "debugging": [
+          "debug",
+          "trace-viewer",
+          "videos",
+          "test-reporters"
+        ],
+        "codegen": [
+          "codegen",
+          "test-generator"
+        ],
+        "ci_cd": [
+          "ci",
+          "ci-intro",
+          "docker"
+        ],
+        "advanced": [
+          "pom",
+          "page-object-model",
+          "global-setup",
+          "test-snapshots"
+        ],
+        "api": [
+          "api/",
+          "class-"
+        ],
+        "release_notes": [
+          "release-notes"
+        ]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "microsoft/playwright",
+      "include_code": false,
+      "code_analysis_depth": "surface",
+      "include_issues": false,
+      "max_issues": 30,
+      "include_changelog": true,
+      "include_releases": true,
+      "file_patterns": [
+        "docs/src/**/*.md",
+        "examples/**/*.ts",
+        "examples/**/*.js",
+        "**/README.md"
+      ]
+    }
+  ]
+}

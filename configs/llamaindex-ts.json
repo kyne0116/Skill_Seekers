@@ -1,0 +1,115 @@
+{
+  "name": "llamaindex-ts",
+  "description": "LlamaIndex TypeScript framework (run-llama/LlamaIndexTS) - the data framework for context-augmented LLM applications in TypeScript. Covers Document parsing (PDF / Word / Excel / Markdown), NodeParser, VectorStoreIndex, retrievers, agents, workflows, structured data extraction, RAG pipelines. Use for L2.5 file parsing and RAG layer integration with Mastra Workflow + MCP.",
+  "merge_mode": "claude-enhanced",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://developers.llamaindex.ai/typescript/framework/",
+      "extract_api": true,
+      "max_pages": 500,
+      "selectors": {
+        "main_content": "article, main, div[role='main']",
+        "title": "h1",
+        "code_blocks": "pre code"
+      },
+      "url_patterns": {
+        "include": [
+          "/typescript/framework",
+          "/typescript/cloud",
+          "/typescript/api"
+        ],
+        "exclude": [
+          "/python/",
+          "/blog/",
+          "/llms.txt"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "getting-started",
+          "quickstart",
+          "installation",
+          "introduction"
+        ],
+        "agents": [
+          "agents",
+          "agent"
+        ],
+        "rag": [
+          "rag",
+          "retrieval",
+          "indexing",
+          "query"
+        ],
+        "document": [
+          "document",
+          "loaders",
+          "readers",
+          "parsing"
+        ],
+        "node_parser": [
+          "node-parser",
+          "splitting",
+          "chunking"
+        ],
+        "embeddings": [
+          "embedding",
+          "embeddings"
+        ],
+        "vector_store": [
+          "vector-store",
+          "vector",
+          "index"
+        ],
+        "workflows": [
+          "workflow",
+          "workflows"
+        ],
+        "structured_data": [
+          "structured",
+          "extraction",
+          "schema"
+        ],
+        "tools": [
+          "tools",
+          "tool"
+        ],
+        "memory": [
+          "memory",
+          "chat-memory"
+        ],
+        "concepts": [
+          "concepts",
+          "context-engineering"
+        ],
+        "reference": [
+          "reference",
+          "api"
+        ]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "run-llama/LlamaIndexTS",
+      "include_code": true,
+      "code_analysis_depth": "surface",
+      "include_issues": false,
+      "max_issues": 50,
+      "include_changelog": true,
+      "include_releases": true,
+      "file_patterns": [
+        "packages/core/src/**/*.ts",
+        "packages/llamaindex/src/**/*.ts",
+        "packages/readers/src/**/*.ts",
+        "packages/embeddings/**/*.ts",
+        "packages/providers/**/*.ts",
+        "packages/workflow/src/**/*.ts",
+        "examples/**/*.ts",
+        "**/*.md",
+        "**/README.md"
+      ]
+    }
+  ]
+}

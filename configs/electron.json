@@ -1,0 +1,114 @@
+{
+  "name": "electron",
+  "description": "Electron 35+ desktop application framework - main process, renderer process, preload scripts, IPC (ipcMain / ipcRenderer / contextBridge), webContents, BrowserWindow, app lifecycle, native modules, packaging (electron-builder / electron-forge). Use for desktop AI assistant host (mce-electron), main↔renderer IPC bridging, streaming chunk emitter, webContents.send patterns, security model (contextIsolation / nodeIntegration), and Electron-specific testing.",
+  "merge_mode": "claude-enhanced",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://www.electronjs.org/docs/latest/",
+      "extract_api": true,
+      "max_pages": 600,
+      "selectors": {
+        "main_content": "article, main, div[role='main']",
+        "title": "h1",
+        "code_blocks": "pre code"
+      },
+      "url_patterns": {
+        "include": [
+          "/docs/latest/"
+        ],
+        "exclude": [
+          "/blog/",
+          "/releases/",
+          "/community/",
+          "/jp/",
+          "/zh/",
+          "/ko/",
+          "/fr/",
+          "/de/",
+          "/ru/",
+          "/pt/",
+          "/es/",
+          "/llms.txt"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "tutorial",
+          "quickstart",
+          "introduction",
+          "why-electron"
+        ],
+        "processes": [
+          "process-model",
+          "main-process",
+          "renderer-process",
+          "process"
+        ],
+        "ipc": [
+          "ipc",
+          "context-bridge",
+          "preload",
+          "ipc-main",
+          "ipc-renderer"
+        ],
+        "api": [
+          "api/",
+          "api-",
+          "browser-window",
+          "web-contents",
+          "session"
+        ],
+        "best_practices": [
+          "best-practices",
+          "security",
+          "performance"
+        ],
+        "development": [
+          "development",
+          "build-instructions"
+        ],
+        "native_modules": [
+          "native-module",
+          "node-module"
+        ],
+        "distribution": [
+          "distribution",
+          "code-signing",
+          "auto-update",
+          "publishing",
+          "windows-store",
+          "mac-app-store"
+        ],
+        "testing": [
+          "testing",
+          "debugging",
+          "automation"
+        ],
+        "examples": [
+          "examples"
+        ],
+        "reference": [
+          "reference",
+          "glossary"
+        ]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "electron/electron",
+      "include_code": false,
+      "code_analysis_depth": "surface",
+      "include_issues": false,
+      "max_issues": 30,
+      "include_changelog": true,
+      "include_releases": true,
+      "file_patterns": [
+        "docs/**/*.md",
+        "**/README.md",
+        "CHANGELOG.md"
+      ]
+    }
+  ]
+}

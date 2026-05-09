@@ -1,0 +1,128 @@
+{
+  "name": "mastra",
+  "description": "Mastra TypeScript AI agent framework - Workflow orchestration, Agents, Memory (working/semantic recall/observational), MCP integration, Voice, Streaming, Human-in-the-Loop, Evals, Deployment. Use this skill for building production AI applications with Mastra Workflow + Memory + MCP, including createWorkflow / createStep / suspend-resume / Mastra Memory storage adapters / @mastra/mcp client integration.",
+  "merge_mode": "claude-enhanced",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://mastra.ai/docs/",
+      "extract_api": true,
+      "max_pages": 500,
+      "selectors": {
+        "main_content": "article, main, div[role='main']",
+        "title": "h1",
+        "code_blocks": "pre code"
+      },
+      "url_patterns": {
+        "include": [
+          "/docs/",
+          "/reference/",
+          "/guides/",
+          "/examples/"
+        ],
+        "exclude": [
+          "/blog/",
+          "/showcase/",
+          "/changelog/",
+          "/llms.txt"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "getting-started",
+          "quickstart",
+          "installation",
+          "introduction"
+        ],
+        "agents": [
+          "agents",
+          "agent"
+        ],
+        "workflows": [
+          "workflows",
+          "workflow",
+          "step",
+          "branch",
+          "loop"
+        ],
+        "memory": [
+          "memory",
+          "working-memory",
+          "semantic-recall",
+          "observational"
+        ],
+        "mcp": [
+          "mcp",
+          "model-context-protocol"
+        ],
+        "tools": [
+          "tools",
+          "tool"
+        ],
+        "rag": [
+          "rag",
+          "vector",
+          "embeddings",
+          "retrieval"
+        ],
+        "evals": [
+          "evals",
+          "evaluation",
+          "metrics"
+        ],
+        "deployment": [
+          "deploy",
+          "deployment",
+          "deployer",
+          "production"
+        ],
+        "observability": [
+          "observability",
+          "tracing",
+          "logging",
+          "monitoring"
+        ],
+        "voice": [
+          "voice",
+          "speech",
+          "tts",
+          "stt"
+        ],
+        "streaming": [
+          "stream",
+          "streaming"
+        ],
+        "reference": [
+          "reference",
+          "api"
+        ]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "mastra-ai/mastra",
+      "include_code": true,
+      "code_analysis_depth": "surface",
+      "include_issues": false,
+      "max_issues": 50,
+      "include_changelog": true,
+      "include_releases": true,
+      "file_patterns": [
+        "packages/core/src/**/*.ts",
+        "packages/memory/src/**/*.ts",
+        "packages/mcp/src/**/*.ts",
+        "packages/deployer/src/**/*.ts",
+        "packages/evals/src/**/*.ts",
+        "packages/loggers/**/*.ts",
+        "packages/rag/src/**/*.ts",
+        "packages/voice/**/*.ts",
+        "examples/**/*.ts",
+        "examples/**/*.mdx",
+        "docs/**/*.mdx",
+        "**/*.md",
+        "**/README.md"
+      ]
+    }
+  ]
+}

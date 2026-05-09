@@ -1,0 +1,108 @@
+{
+  "name": "mcp-typescript-sdk",
+  "description": "Model Context Protocol (MCP) TypeScript SDK - Anthropic's open standard for connecting AI applications to external systems via tools, resources, prompts, sampling. Covers MCP Server (capability registration / tool / resource / prompt / sampling), MCP Client (listTools / callTool), transports (stdio / SSE / streamable HTTP), and middleware patterns (requireConfirmation / auth). Use for L2 capability registration boundary in three-layer architectures.",
+  "merge_mode": "claude-enhanced",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://modelcontextprotocol.io/",
+      "extract_api": true,
+      "max_pages": 400,
+      "selectors": {
+        "main_content": "article, main, div[role='main']",
+        "title": "h1",
+        "code_blocks": "pre code"
+      },
+      "url_patterns": {
+        "include": [
+          "/docs/",
+          "/specification/",
+          "/sdk/typescript",
+          "/learn/",
+          "/develop/",
+          "/clients",
+          "/extensions/"
+        ],
+        "exclude": [
+          "/blog/",
+          "/llms.txt"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "getting-started",
+          "quickstart",
+          "introduction"
+        ],
+        "concepts": [
+          "concepts",
+          "architecture",
+          "learn"
+        ],
+        "build_server": [
+          "build-server",
+          "server",
+          "tools",
+          "resources",
+          "prompts"
+        ],
+        "build_client": [
+          "build-client",
+          "client",
+          "list-tools",
+          "call-tool"
+        ],
+        "transports": [
+          "transport",
+          "stdio",
+          "sse",
+          "http",
+          "streamable"
+        ],
+        "specification": [
+          "specification",
+          "spec",
+          "schema",
+          "protocol"
+        ],
+        "sampling": [
+          "sampling",
+          "completion"
+        ],
+        "auth": [
+          "auth",
+          "authentication",
+          "authorization"
+        ],
+        "examples": [
+          "examples",
+          "tutorials"
+        ],
+        "clients": [
+          "clients",
+          "claude",
+          "chatgpt",
+          "vscode",
+          "cursor"
+        ]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "modelcontextprotocol/typescript-sdk",
+      "include_code": true,
+      "code_analysis_depth": "surface",
+      "include_issues": false,
+      "max_issues": 50,
+      "include_changelog": true,
+      "include_releases": true,
+      "file_patterns": [
+        "src/**/*.ts",
+        "examples/**/*.ts",
+        "**/*.md",
+        "**/README.md"
+      ]
+    }
+  ]
+}

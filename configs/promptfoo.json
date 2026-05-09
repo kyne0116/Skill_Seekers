@@ -1,0 +1,119 @@
+{
+  "name": "promptfoo",
+  "description": "Promptfoo (promptfoo/promptfoo) - open-source CLI and library for evaluating and red-teaming LLM applications. Covers Evals (configuration / assertions / providers / runtime), Red-teaming, LLM-as-judge, GitHub Action integration, structured output validation. Use for prompt quality regression testing, LLM behavior evaluation (L1 plan recall / L2 contentProducer schema / L3 cite-or-refuse), and CI/CD integration with TypeScript / Node-native stack (no Python).",
+  "merge_mode": "claude-enhanced",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://www.promptfoo.dev/docs/",
+      "extract_api": true,
+      "max_pages": 500,
+      "selectors": {
+        "main_content": "article, main, div[role='main']",
+        "title": "h1",
+        "code_blocks": "pre code"
+      },
+      "url_patterns": {
+        "include": [
+          "/docs/"
+        ],
+        "exclude": [
+          "/blog/",
+          "/changelog",
+          "/llms.txt"
+        ]
+      },
+      "categories": {
+        "getting_started": [
+          "intro",
+          "getting-started",
+          "installation",
+          "quickstart"
+        ],
+        "configuration": [
+          "configuration",
+          "config",
+          "yaml"
+        ],
+        "assertions": [
+          "assertion",
+          "assertions",
+          "metric",
+          "metrics"
+        ],
+        "providers": [
+          "provider",
+          "providers",
+          "openai",
+          "anthropic",
+          "google",
+          "openai-compatible",
+          "ollama"
+        ],
+        "red_teaming": [
+          "red-team",
+          "red-teaming",
+          "plugin",
+          "strategy"
+        ],
+        "runtime": [
+          "runtime",
+          "execute",
+          "run"
+        ],
+        "guides": [
+          "guide",
+          "guides",
+          "usage"
+        ],
+        "integrations": [
+          "integration",
+          "integrations",
+          "github-action",
+          "ci"
+        ],
+        "code_scanning": [
+          "code-scanning",
+          "vulnerability"
+        ],
+        "concepts": [
+          "concept",
+          "concepts"
+        ],
+        "frameworks": [
+          "framework",
+          "frameworks"
+        ],
+        "troubleshooting": [
+          "troubleshooting",
+          "faq"
+        ],
+        "reference": [
+          "reference",
+          "api"
+        ]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "promptfoo/promptfoo",
+      "include_code": true,
+      "code_analysis_depth": "surface",
+      "include_issues": false,
+      "max_issues": 50,
+      "include_changelog": true,
+      "include_releases": true,
+      "file_patterns": [
+        "src/**/*.ts",
+        "examples/**/*.ts",
+        "examples/**/*.yaml",
+        "examples/**/*.yml",
+        "site/docs/**/*.md",
+        "site/docs/**/*.mdx",
+        "**/*.md",
+        "**/README.md"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "name": "vercel-ai",
+  "description": "Vercel AI SDK (vercel/ai) - the TypeScript toolkit for building AI applications. Covers AI SDK Core (streamText / generateText / tool calling / multi-step agents) + AI SDK UI (@ai-sdk/react useChat / useObject / useCompletion) + AI SDK RSC + multi-provider support (OpenAI / Anthropic / Google / openai-compatible). Use for L3 streaming synthesis, frontend agentic UI, structured outputs, and tool calling integration with MCP.",
+  "merge_mode": "claude-enhanced",
+  "sources": [
+    {
+      "type": "documentation",
+      "base_url": "https://ai-sdk.dev/docs/",
+      "extract_api": true,
+      "max_pages": 600,
+      "selectors": {
+        "main_content": "article, main, div[role='main']",
+        "title": "h1",
+        "code_blocks": "pre code"
+      },
+      "url_patterns": {
+        "include": [
+          "/docs/"
+        ],
+        "exclude": [
+          "/playground",
+          "/showcase",
+          "/changelog",
+          "/llms.txt"
+        ]
+      },
+      "categories": {
+        "foundations": [
+          "foundations",
+          "core-concepts",
+          "providers-and-models",
+          "tools",
+          "agents"
+        ],
+        "getting_started": [
+          "getting-started",
+          "quickstart",
+          "installation"
+        ],
+        "ai_sdk_core": [
+          "ai-sdk-core",
+          "generate-text",
+          "stream-text",
+          "generate-object",
+          "stream-object",
+          "tool-calling"
+        ],
+        "ai_sdk_ui": [
+          "ai-sdk-ui",
+          "chatbot",
+          "completion",
+          "object-generation",
+          "use-chat",
+          "use-object"
+        ],
+        "ai_sdk_rsc": [
+          "ai-sdk-rsc",
+          "rsc",
+          "server-components"
+        ],
+        "agents": [
+          "agents",
+          "agent",
+          "loop",
+          "multi-step"
+        ],
+        "providers": [
+          "providers",
+          "openai",
+          "anthropic",
+          "google",
+          "openai-compatible",
+          "ollama"
+        ],
+        "streaming": [
+          "stream",
+          "streaming",
+          "data-stream"
+        ],
+        "structured": [
+          "structured",
+          "schema",
+          "zod",
+          "object"
+        ],
+        "reference": [
+          "reference",
+          "api"
+        ],
+        "migration": [
+          "migration",
+          "migrate",
+          "upgrade"
+        ]
+      },
+      "rate_limit": 0.5
+    },
+    {
+      "type": "github",
+      "repo": "vercel/ai",
+      "include_code": true,
+      "code_analysis_depth": "surface",
+      "include_issues": false,
+      "max_issues": 50,
+      "include_changelog": true,
+      "include_releases": true,
+      "file_patterns": [
+        "packages/ai/src/**/*.ts",
+        "packages/react/src/**/*.ts",
+        "packages/react/src/**/*.tsx",
+        "packages/provider/src/**/*.ts",
+        "packages/provider-utils/src/**/*.ts",
+        "packages/openai/src/**/*.ts",
+        "packages/anthropic/src/**/*.ts",
+        "packages/google/src/**/*.ts",
+        "packages/openai-compatible/src/**/*.ts",
+        "examples/**/*.ts",
+        "examples/**/*.tsx",
+        "**/*.md",
+        "**/README.md"
+      ]
+    }
+  ]
+}
